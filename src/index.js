@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const port = 8080;
 
@@ -6,7 +7,8 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     next();
 });
-app.get("/api/proxy", async (req, res) => {
+app.get("/", async (req, res) => {
+    const { default: fetch } = await import("node-fetch");
     const url = process.env.URL;
     const apiKey = process.env.API_KEY;
 
@@ -21,7 +23,10 @@ app.get("/api/proxy", async (req, res) => {
         const data = await response.json();
         res.json(data);
     } catch (error) {
-        console.log(error);
+        console.error("Erro:", error);
+        res.status(500).json({
+            error: "Erro ao obter os dados das criptomoedas",
+        });
     }
 });
 
