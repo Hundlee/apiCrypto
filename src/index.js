@@ -9,6 +9,20 @@ app.use((req, res, next) => {
 app.get("/api/proxy", async (req, res) => {
     const url = process.env.URL;
     const apiKey = process.env.API_KEY;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "X-CMC_PRO_API_KEY": apiKey,
+                Accept: "application/json",
+            },
+        });
+
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 app.listen(port, () => {
